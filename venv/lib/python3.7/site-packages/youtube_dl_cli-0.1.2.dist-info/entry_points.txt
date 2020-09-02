@@ -1,0 +1,4 @@
+[console_scripts]
+ydl_cli = youtube_dl_cli.cli:main
+ydl_cmd = youtube_dl_cli.cli:main
+

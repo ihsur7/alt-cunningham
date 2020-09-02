@@ -5,6 +5,8 @@ from discord.ext import commands
 import asyncio
 import praw
 import youtube_dl
+from steam.client import SteamClient
+from dota2.client import Dota2Client
 
 TOKEN = 'NDU5NjE0MjQxOTM5MjU5NDA0.Dg4w7Q.u_bVogw0I5awXw_WNavop083_uU'
 
@@ -12,6 +14,13 @@ BOT_PREFIX = ('.')
 
 bot = commands.Bot(command_prefix = BOT_PREFIX)
 bot.remove_command('help')
+
+sclient = SteamClient()
+dota = Dota2Client(sclient)
+
+@sclient.on('logged_on')
+def start_dota():
+    dota.launch()
 
 players = {}
 queues = {}
@@ -29,7 +38,7 @@ reddit = praw.Reddit(client_id='3_2IOgyYY7TXHQ',
 @bot.event
 async def on_ready():
     print('Running on ' + bot.user.name)
-    print('ID: ' + bot.user.id)
+    print('ID: ' + str(bot.user.id))
     # msg = '*beep*'
     # for server in bot.servers:
     #     for channel in server.channels:
@@ -38,11 +47,20 @@ async def on_ready():
     #             await asyncio.sleep(3)
     #             await bot.delete_message(message)
     #             await asyncio.sleep(4)
-    await bot.change_presence(game = discord.Game(name = 'Cyberpunk 2077'))
+    await bot.change_presence(status=discord.Status.idle, activity=discord.Game('Cyberpunk 2077'))
 
 @bot.command()
-async def ping():
-    await bot.say('Pong!')
+# async def on_message(message):
+#     if message.content.startswith('ping'):
+#         channel = message.channel
+#         await channel.send('pong!')
+async def ping(ctx):
+    channel = ctx.message.channel
+    await channel.send('Pong!')
+
+@bot.command()
+async def quit(ctx):
+    await bot.logout()
 
 @bot.command(pass_context=True)
 async def permission(ctx):

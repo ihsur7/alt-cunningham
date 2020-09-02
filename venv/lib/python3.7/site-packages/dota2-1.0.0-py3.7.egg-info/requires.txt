@@ -1,0 +1,4 @@
+steam[client]~=1.0
+gevent-eventemitter>=2.1
+gevent>=1.3.0
+protobuf>=3.0.0
