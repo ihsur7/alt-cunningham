@@ -8,7 +8,7 @@ import youtube_dl
 from steam.client import SteamClient
 from dota2.client import Dota2Client
 
-TOKEN = 'NDU5NjE0MjQxOTM5MjU5NDA0.Dg4w7Q.u_bVogw0I5awXw_WNavop083_uU'
+TOKEN = ''
 
 BOT_PREFIX = ('.')
 
