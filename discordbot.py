@@ -1,26 +1,34 @@
 #
 import random
+
+from click import pass_context
 import discord
 from discord.ext import commands
 import asyncio
 import praw
 import youtube_dl
-from steam.client import SteamClient
-from dota2.client import Dota2Client
+# from steam.client import SteamClient
+# from dota2.client import Dota2Client
+from mytoken import MYTOKEN 
+import pandas as pd
+import numpy as np
+import os
 
-TOKEN = ''
+TOKEN = MYTOKEN
 
 BOT_PREFIX = ('.')
-
-bot = commands.Bot(command_prefix = BOT_PREFIX)
+intents = discord.Intents.all()
+bot = commands.Bot(command_prefix = BOT_PREFIX, intents=intents)
 bot.remove_command('help')
 
-sclient = SteamClient()
-dota = Dota2Client(sclient)
 
-@sclient.on('logged_on')
-def start_dota():
-    dota.launch()
+
+# sclient = SteamClient()
+# dota = Dota2Client(sclient)
+
+# @sclient.on('logged_on')
+# def start_dota():
+#     dota.launch()
 
 players = {}
 queues = {}
@@ -200,6 +208,53 @@ async def playlist(ctx):
     embed.add_field(name='.leave', value='Leaves the current voice channel.', inline=False)
 
     await bot.send_message(ctx.message.channel, embed=embed)
+
+@bot.command(pass_context=True)
+async def bet(ctx, *args):
+    wl = args[0]
+    points = args[1]
+    #check for database
+    # guild = bot.get_guild(305352819894910986)
+    # members = await guild.fetch_members().flatten()
+    # print(guild)
+    # print(members)
+    
+    # if guild:
+    #     for member in guild.members:
+    #         try:
+    #             print('name: {}'.format(member.name))
+    #             print('id: {}'.format(member.id))
+    #         except UnicodeDecodeError:
+    #             pass
+    if os.path.exists('database-'+str(ctx.guild)+'.csv'):
+        df = pd.read_csv('database-'+str(ctx.guild)+'.csv')
+        author = ctx.guild.author
+    else:
+        members = ctx.guild.members
+        data_arr = np.zeros(shape=(1,3))
+        
+        for i in members:
+            temp_df = np.asarray([[i.id, i.name, np.int64(1000000)]])
+            data_arr = np.append(data_arr,temp_df, axis=0)
+        # print(data_arr)
+        df = pd.DataFrame(data=data_arr, columns=['id', 'name', 'points'])
+        df.to_csv('database-'+str(ctx.guild)+'.csv')
+
+    await ctx.channel.send(f"command is {wl}, {points}")
+
+@bot.command(pass_context=True)
+async def points(ctx):
+    df = pd.read_csv('database-'+str(ctx.guild)+'.csv')
+    member = ctx.message.author.id
+    match = df[df.eq(member).any(1)]
+    await ctx.channel.send(f"author is {member}, match is {match}")
+
+# async def members(ctx):
+#     for member in bot.get_guild(305352819894910986):
+
+#     for guild in bot.guilds:
+#         for member in guild.members:
+#             print(member)
 
 # @bot.command(pass_context=True)
 # async def next(ctx):
