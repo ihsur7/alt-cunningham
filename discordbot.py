@@ -658,17 +658,15 @@ async def on_member_update(before, after):
 async def isinbulldogstream():
     guild = bot.get_guild(305352819894910986)
     bazba = guild.get_member(136431788980568064)
-    if is_in_bulldog_stream() == True:
-        if bazba.display_name == 'watching AdmiralBulldog':
-            return
-        await bazba.edit(nick='watching AdmiralBulldog')
-        return
-        # await ctx.channel.send(f"{bazba.name} is currently watching AdmiralBulldog's Stream.")
-        # if bazba.display_name == 'not watching AdmiralBulldog':
-        #     return
-        # await bazba.edit(nick='~Bazba') 
+    bulldog_tag = ' (watching AdmiralBulldog)'
+    nickname = bazba.display_name
+    if is_in_bulldog_stream():
+        if not nickname.endswith(bulldog_tag):
+            await bazba.edit(nick=nickname + bulldog_tag)
+    else:
+        if nickname.endswith(bulldog_tag):
+            await bazba.edit(nick=nickname.removesuffix(bulldog_tag))
     return
-        # await ctx.channel.send(f"{bazba.name} is not in AdmiralBulldog's Stream.")
 
 
 def is_in_bulldog_stream():
