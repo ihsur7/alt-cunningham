@@ -74,7 +74,7 @@ async def on_ready():
     #             await bot.delete_message(message)
     #             await asyncio.sleep(4)
     await bot.change_presence(status=discord.Status.idle, activity=discord.Game('Cyberpunk 2077'))
-    await isinbulldogstream.start()
+    # await isinbulldogstream.start()
 
 @bot.command()
 # async def on_message(message):
@@ -452,11 +452,11 @@ async def endbet(ctx, *args):
                     st = 'won'
                     prize_points = int(payout*betpoints)
                     final_points = prize_points + before_total_points
-                    await user.send(f"Your {bet} bet of {betpoints} points, resulted in {args[0]}. You have {st} {prize_points} points, and your total points are {int(final_points)} points.")
+                    await user.send(f"Your {bet} bet of {int(betpoints)} points, resulted in {args[0]}. You have {st} {int(prize_points)} points, and your total points are {int(final_points)} points.")
                 else:
                     st = 'lost'
                     points = int(df.loc[df['id'] == hex(user.id)].values[0][2])
-                    await user.send(f"Your {bet} bet of {betpoints} points, resulted in {args[0]}. You have {st} {betpoints} points, and your remaining points are {int(before_total_points-betpoints)} points.")
+                    await user.send(f"Your {bet} bet of {int(betpoints)} points, resulted in {args[0]}. You have {st} {int(betpoints)} points, and your remaining points are {int(before_total_points-betpoints)} points.")
             filter_df.loc[filter_df['wl'] == 'win', 'points'] *= payout
             filter_df.loc[filter_df['wl'] == 'lose', 'points'] *= -1
         else:
@@ -472,11 +472,11 @@ async def endbet(ctx, *args):
                     st = 'won'
                     prize_points = int(payout*betpoints)
                     final_points = prize_points + before_total_points
-                    await user.send(f"Your {bet} bet of {betpoints} points, resulted in {args[0]}. You have {st} {prize_points} points, and your total points are {int(final_points)} points.")
+                    await user.send(f"Your {bet} bet of {int(betpoints)} points, resulted in {args[0]}. You have {st} {int(prize_points)} points, and your total points are {int(final_points)} points.")
                 else:
                     st = 'lost'
                     points = int(df.loc[df['id'] == hex(user.id)].values[0][2])
-                    await user.send(f"Your {bet} bet of {betpoints} points, resulted in {args[0]}. You have {st} {betpoints} points, and your remaining points are {int(before_total_points-betpoints)} points.")
+                    await user.send(f"Your {bet} bet of {int(betpoints)} points, resulted in {args[0]}. You have {st} {int(betpoints)} points, and your remaining points are {int(before_total_points-betpoints)} points.")
             filter_df.loc[filter_df['wl'] == 'lose', 'points'] *= payout
             filter_df.loc[filter_df['wl'] == 'win', 'points'] *= -1
         df = pd.merge(df, filter_df, how='left', on='id')
@@ -598,7 +598,7 @@ async def ban(ctx, *args):
     member = hex(ctx.message.author.id)
     points = int(df.loc[df['id'] == member].values[0][2])
     bantime = 5
-    cost = 150000
+    cost = 10000
     guild = ctx.guild
     ban_member = ctx.message.raw_mentions[0]
     ban_member_name = guild.get_member(ban_member)
@@ -657,11 +657,12 @@ async def on_member_update(before, after):
 # @bot.command(pass_context=True)
 async def isinbulldogstream():
     guild = bot.get_guild(305352819894910986)
-    bazba = guild.get_member(136431788980568064)
+    bazba = guild.get_member(100915599936344064) #136431788980568064)
+    # cmoon = guild.get_member()
     if is_in_bulldog_stream() == True:
         if bazba.display_name == 'watching AdmiralBulldog':
             return
-        await bazba.edit(nick='watching AdmiralBulldog')
+        await bazba.edit(nick='Bazba~')
         return
         # await ctx.channel.send(f"{bazba.name} is currently watching AdmiralBulldog's Stream.")
         # if bazba.display_name == 'not watching AdmiralBulldog':
